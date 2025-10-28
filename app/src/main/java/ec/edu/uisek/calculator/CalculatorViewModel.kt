@@ -102,13 +102,15 @@ class CalculatorViewModel : ViewModel() {
             //le indicamos que estamos usando el paramentro de esta clase
             this.operator = operator
         }
+
+        performCalculation()
     }
 
     private fun enterNumber(number: String) {
         //va concatenando cada numero en la pnatalla
         if (operator == null) {
             number1 += number
-            state = state.copy(display = number)
+            state = state.copy(display = number1)
         } else {
             number2 += number
             state = state.copy(display = number2)

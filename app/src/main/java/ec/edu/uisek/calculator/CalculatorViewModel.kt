@@ -56,7 +56,11 @@ class CalculatorViewModel: ViewModel(){
     }
 
     private fun clearAll() {
-        TODO("Not yet implemented")
+        //reseteamos los valores al original
+        number1 = " "
+        number2 = " "
+        operator = null
+        state = state.copy("0")
     }
 
     private fun clearLast() {

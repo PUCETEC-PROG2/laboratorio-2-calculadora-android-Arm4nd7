@@ -65,15 +65,13 @@ fun CalculatorScreen(
             maxLines = 1
         )
         // Aquí colocaremos la cuadrícula de botones
-        CalculatorGrid { label ->
-            inputText += label
-        }
+        CalculatorGrid(onEvent = viewModel:: onEvent)
 
     }
 }
 
 @Composable
-fun CalculatorGrid(onButtonClick: (String) -> Unit) {
+fun CalculatorGrid(onEvent: (CalculatorEvent) ->  Unit) {
     val buttons = listOf(
         "7", "8", "9", "÷",
         "4", "5", "6", "×",
@@ -91,15 +89,24 @@ fun CalculatorGrid(onButtonClick: (String) -> Unit) {
         items(buttons.size) { index ->
             val label = buttons[index]
             CalculatorButton(label = label) {
-                onButtonClick(label)
+                when(label) {
+                    in "0" .. "9" -> onEvent(CalculatorEvent.Number(label))
+                    "." -> onEvent(CalculatorEvent.Decimal)
+                    "=" -> onEvent(CalculatorEvent.Calculate)
+                    else -> onEvent(CalculatorEvent.Operator(label))
+                }
             }
         }
         item(span = { GridItemSpan(2) }) {
-            CalculatorButton(label = "AC") { }
+            CalculatorButton(label = "AC") {
+                onEvent(CalculatorEvent.AllClear)
+            }
         }
         item{}
         item {
-            CalculatorButton(label = "C") { }
+            CalculatorButton(label = "C") {
+                onEvent(CalculatorEvent.Clear)
+            }
         }
 
 

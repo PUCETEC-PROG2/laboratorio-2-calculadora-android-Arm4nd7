@@ -51,29 +51,7 @@ class CalculatorViewModel : ViewModel() {
     }
 
     ///AQUI comenzamos a implementar las clases
-    private fun performCalculation() {
-        //vamos a calcular
-        //tenemos que convertir datos string a enteros o decimales
-        val num1 = number1.toDoubleOrNull()
-        val num2 = number2.toDoubleOrNull()
 
-        //verifico si tengo o no numeros
-        if (num1 != null && num2 != null && operator != null) {
-            val result = when (operator) {
-                "×" -> num1 * num2
-                "−" -> num1 - num2
-                "+" -> num1 + num2
-                "÷" -> if (num2 != 0.0) num1 / num2 else Double.NaN // indicamos que no sea sero y si es cero entonces me da no es un numero (NaN)
-                else -> "0.0"
-
-            }
-            clearAll()
-            val resultString = if (result.isNaN()) "Error" else result.toString().removeSuffix(".0")
-            number1 = if (result.isNaN()) "" else resultString
-            state = state.copy(resultString)
-        }
-
-    }
 
     private fun clearAll() {
         //reseteamos los valores al original
@@ -135,5 +113,31 @@ class CalculatorViewModel : ViewModel() {
             number2 += number
             state = state.copy(display = number2)
         }
+    }
+
+
+    private fun performCalculation() {
+        //vamos a calcular
+        //tenemos que convertir datos string a enteros o decimales
+        val num1 = number1.toDoubleOrNull()
+        val num2 = number2.toDoubleOrNull()
+
+        //verifico si tengo o no numeros
+        if (num1 != null && num2 != null && operator != null) {
+            val result = when (operator) {
+                "×" -> num1 * num2
+                "−" -> num1 - num2
+                "+" -> num1 + num2
+                // indicamos que no sea cero y si es cero entonces me da no es un numero (NaN)
+                "÷" -> if (num2 != 0.0) num1 / num2 else Double.NaN
+                else -> 0.0
+
+            }
+            clearAll()
+            val resultString = if (result.isNaN()) "Error" else result.toString().removeSuffix(".0")
+            number1 = if (result.isNaN()) "" else resultString
+            state = state.copy(resultString)
+        }
+
     }
 }

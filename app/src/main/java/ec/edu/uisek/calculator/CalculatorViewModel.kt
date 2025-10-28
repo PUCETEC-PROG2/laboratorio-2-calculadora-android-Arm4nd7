@@ -52,7 +52,27 @@ class CalculatorViewModel : ViewModel() {
 
     ///AQUI comenzamos a implementar las clases
     private fun performCalculation() {
-        TODO("Not yet implemented")
+        //vamos a calcular
+        //tenemos que convertir datos string a enteros o decimales
+        val num1 = number1.toDoubleOrNull()
+        val num2 = number2.toDoubleOrNull()
+
+        //verifico si tengo o no numeros
+        if (num1 != null && num2 != null && operator != null) {
+            val result = when (operator) {
+                "×" -> num1 * num2
+                "−" -> num1 - num2
+                "+" -> num1 + num2
+                "÷" -> if (num2 != 0.0) num1 / num2 else Double.NaN // indicamos que no sea sero y si es cero entonces me da no es un numero (NaN)
+                else -> "0.0"
+
+            }
+            clearAll()
+            val resultString = if (result.isNaN()) "Error" else result.toString().removeSuffix(".0")
+            number1 = if (result.isNaN()) "" else resultString
+            state = state.copy(resultString)
+        }
+
     }
 
     private fun clearAll() {
@@ -74,12 +94,12 @@ class CalculatorViewModel : ViewModel() {
                 //actualizo el estado para que se muestre en pantalla
                 state = state.copy(if (number1.isBlank()) "0" else number1)
             }
-        }else{
+        } else {
             //lo mimso para el numero2
-            if(number2.isNotBlank()){
+            if (number2.isNotBlank()) {
                 number2 = number2.dropLast(1)
-                state = state.copy(if(number2.isBlank()) "0" else number2)
-            }else{
+                state = state.copy(if (number2.isBlank()) "0" else number2)
+            } else {
                 operator = null
                 state = state.copy(number1)
             }

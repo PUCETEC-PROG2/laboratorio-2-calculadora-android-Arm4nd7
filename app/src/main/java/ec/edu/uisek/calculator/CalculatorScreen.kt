@@ -37,10 +37,14 @@ import ec.edu.uisek.calculator.ui.theme.Purple40
 import ec.edu.uisek.calculator.ui.theme.Purple80
 import ec.edu.uisek.calculator.ui.theme.Red
 import ec.edu.uisek.calculator.ui.theme.UiSekBlue
-
+import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
-fun CalculatorScreen() {
-    var inputText by remember { mutableStateOf("") }
+fun CalculatorScreen(
+    //paso mi parametro viewModel
+    viewModel: CalculatorViewModel = viewModel()
+) {
+    //toamos el state de CalculatorViewModel
+    val state = viewModel.state
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -48,27 +52,18 @@ fun CalculatorScreen() {
             .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        TextField(
-            value = inputText,
-            onValueChange = { inputText = it },
+        Text(
+            //le damos para que sea un valor estatico
+            text = state.display,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            textStyle = LocalTextStyle.current.copy(
-                fontSize = 36.sp,
-                textAlign = TextAlign.End,
-                color = Color.White
-            ),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                cursorColor = Color.White
-            ),
-            singleLine = true
+                .padding(16.dp),
+            fontSize = 45.sp,
+            textAlign = TextAlign.End,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1
         )
-
         // Aquí colocaremos la cuadrícula de botones
         CalculatorGrid { label ->
             inputText += label
@@ -116,13 +111,13 @@ fun CalculatorGrid(onButtonClick: (String) -> Unit) {
 fun CalculatorButton(label: String, onClick: () -> Unit) {
     Box (
         modifier = Modifier
-            .aspectRatio(if(label=="AC")2f else 1f)
+            .aspectRatio(if (label == "AC") 2f else 1f)
             .fillMaxSize()
             .clip(CircleShape)
             .background(
-                when(label) {
+                when (label) {
                     in listOf("÷", "×", "−", "+", "=", ".") -> Purple80
-                    in listOf("AC","C") -> Red
+                    in listOf("AC", "C") -> Red
 
                     else -> UiSekBlue
                 }

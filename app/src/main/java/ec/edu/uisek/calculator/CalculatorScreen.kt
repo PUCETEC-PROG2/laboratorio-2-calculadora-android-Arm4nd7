@@ -73,6 +73,7 @@ fun CalculatorScreen() {
         CalculatorGrid { label ->
             inputText += label
         }
+
     }
 }
 

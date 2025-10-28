@@ -13,8 +13,8 @@ data class CalculatorState(
 //nos sirve para mapear los eventos
 sealed class CalculatorEvent {
     //vamos a manejar cuando se presione en numeros o operaciones
-    data class Number(val number: String): CalculatorEvent()
-    data class Operator(val operator: String): CalculatorEvent()
+    data class Number(val number: String) : CalculatorEvent()
+    data class Operator(val operator: String) : CalculatorEvent()
 
     //lo cramos asi porque no va a recibir ningun parametro
     object Clear : CalculatorEvent()
@@ -25,12 +25,12 @@ sealed class CalculatorEvent {
 }
 
 ///heredamos ViewModel
-class CalculatorViewModel: ViewModel(){
+class CalculatorViewModel : ViewModel() {
 
     //vamos a almacenoar estos dos factores en cadenas
-    private var number1 : String = ""
-    private var number2 : String = ""
-    private var operator : String? = null //significa que puede ser nula  o string
+    private var number1: String = ""
+    private var number2: String = ""
+    private var operator: String? = null //significa que puede ser nula  o string
 
     //vamos a controlar el calculatorstate
     //asi pueden ver el cambio que vamos a calcular
@@ -38,8 +38,8 @@ class CalculatorViewModel: ViewModel(){
         //vamos a setear el valor de state
         private set
 
-    fun onEvent(event: CalculatorEvent){
-        when(event){
+    fun onEvent(event: CalculatorEvent) {
+        when (event) {
             is CalculatorEvent.Number -> enterNumber(event.number)
             is CalculatorEvent.Operator -> enterOperator(event.operator)
             is CalculatorEvent.Decimal -> enterDecimal()
@@ -64,16 +64,35 @@ class CalculatorViewModel: ViewModel(){
     }
 
     private fun clearLast() {
-        TODO("Not yet implemented")
+        //vamo a borrar el ultimo elemento que ingresa
+        //verifico que si hay o no operador
+        if (operator == null) {
+            //verifico si existe un numero
+            if (number1.isNotBlank()) {
+                //si no esta en blanco lo elimina
+                number1 = number1.dropLast(1)
+                //actualizo el estado para que se muestre en pantalla
+                state = state.copy(if (number1.isBlank()) "0" else number1)
+            }
+        }else{
+            //lo mimso para el numero2
+            if(number2.isNotBlank()){
+                number2 = number2.dropLast(1)
+                state = state.copy(if(number2.isBlank()) "0" else number2)
+            }else{
+                operator = null
+                state = state.copy(number1)
+            }
+        }
     }
 
     private fun enterDecimal() {
-        val currentNumber = if(operator == null) number1 else number2
-        if (!currentNumber.contains(".")){
-            if (operator == null){
+        val currentNumber = if (operator == null) number1 else number2
+        if (!currentNumber.contains(".")) {
+            if (operator == null) {
                 number1 += "."
                 state = state.copy(display = number1)
-            }else {
+            } else {
                 number2 += "."
                 state = state.copy(display = number2)
             }
@@ -81,7 +100,7 @@ class CalculatorViewModel: ViewModel(){
     }
 
     private fun enterOperator(operator: String) {
-        if (number1.isNotBlank()){
+        if (number1.isNotBlank()) {
             //le indicamos que estamos usando el paramentro de esta clase
             this.operator = operator
         }
@@ -89,10 +108,10 @@ class CalculatorViewModel: ViewModel(){
 
     private fun enterNumber(number: String) {
         //va concatenando cada numero en la pnatalla
-        if(operator == null){
+        if (operator == null) {
             number1 += number
             state = state.copy(display = number)
-        }else{
+        } else {
             number2 += number
             state = state.copy(display = number2)
         }

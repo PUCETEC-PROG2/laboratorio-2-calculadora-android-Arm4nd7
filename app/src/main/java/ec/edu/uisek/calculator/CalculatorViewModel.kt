@@ -55,8 +55,8 @@ class CalculatorViewModel : ViewModel() {
 
     private fun clearAll() {
         //reseteamos los valores al original
-        number1 = " "
-        number2 = " "
+        number1 = ""
+        number2 = ""
         operator = null
         state = state.copy("0")
     }
@@ -98,12 +98,12 @@ class CalculatorViewModel : ViewModel() {
     }
 
     private fun enterOperator(operator: String) {
-        if (number1.isNotBlank()) {
-            //le indicamos que estamos usando el paramentro de esta clase
-            this.operator = operator
+        //le indicamos que estamos usando el paramentro de esta clase
+        if (number1.isNotBlank() && this.operator != null && number2.isNotBlank()) {
+            performCalculation()
         }
-
-        performCalculation()
+        this.operator = operator
+        state = state.copy(display = operator)
     }
 
     private fun enterNumber(number: String) {
@@ -140,6 +140,5 @@ class CalculatorViewModel : ViewModel() {
             number1 = if (result.isNaN()) "" else resultString
             state = state.copy(resultString)
         }
-
     }
 }
